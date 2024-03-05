@@ -71,6 +71,7 @@ for arg do
 
     case "$arg" in
         -a) mode=artist ;;
+        -b) mode=album ;;
         -p) mode=playlist ;;
         -c) mode=control ;;
     esac
@@ -93,6 +94,14 @@ case "$mode" in
             mpc find artist "$artist" album "$album" | sort | mpc add
         fi
 
+        mpc play >/dev/null
+    ;;
+    album)
+        album=$(mpc list album | dmenu -p "albums > ")
+        [[ $album ]] || exit 1
+
+        mpc clear
+        mpc find album "$album" | sort | mpc add
         mpc play >/dev/null
     ;;
     playlist)
