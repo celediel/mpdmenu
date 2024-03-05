@@ -3,6 +3,14 @@
 all_name='[ALL]'
 mode=library
 
+controls="󰐎 toggle
+ play
+ pause
+󰒭 next
+󰒮 prev
+󰒟 random
+󰕇 repeat"
+
 make_status() {
     local nowplaying=$(mpc status | head -n1)
     local random_status=$(mpc status | tail -n1 | grep -Eo "random: (on|off)" | cut -d':' -f2 | xargs)
@@ -49,6 +57,10 @@ d_playlist() {
     printf '%s' "${track%% *}"
 }
 
+d_control() {
+    printf "${controls[@]}" | dmenu -p "$(make_status) > " "${dmenu_args[@]}" | cut -d' ' -f2
+}
+
 i=2
 
 for arg do
@@ -60,6 +72,7 @@ for arg do
     case "$arg" in
         -l) mode=library ;;
         -p) mode=playlist ;;
+        -c) mode=control ;;
     esac
 
     let i++
@@ -84,5 +97,10 @@ case "$mode" in
     ;;
     playlist)
         mpc play "$(d_playlist)" >/dev/null
+    ;;
+    control)
+        control=$(d_control)
+        [[ $control ]] || exit 1
+        mpc "$(control)" >/dev/null
     ;;
 esac
