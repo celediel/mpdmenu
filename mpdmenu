@@ -112,7 +112,7 @@ case "$mode" in
         album=$(d_album "$artist")
         [[ $album ]] || exit 2
 
-        mpc clear
+        mpc clear >/dev/null
         if [[ $album == "$all_name" ]]; then
             mpc find artist "$artist" | sort | mpc add
         else
@@ -128,7 +128,7 @@ case "$mode" in
         album=$(d_albuma "$artist")
         [[ $album ]] || exit 2
 
-        mpc clear
+        mpc clear >/dev/null
         if [[ $album == "$all_name" ]]; then
             mpc find albumartist "$artist" | sort | mpc add
         else
@@ -141,7 +141,7 @@ case "$mode" in
         album=$(mpc list album | $dmenu "albums > ")
         [[ $album ]] || exit 1
 
-        mpc clear
+        mpc clear >/dev/null
         mpc find album "$album" | sort | mpc add
         mpc play >/dev/null
     ;;
@@ -151,12 +151,10 @@ case "$mode" in
     playlists)
         playlist=$(mpc lsplaylists | $dmenu "playlists > ")
         [[ $playlist ]] || exit 1
-        mpc clear
-        mpc load $playlist
+        mpc clear >/dev/null
+        mpc load $playlist >/dev/null
     ;;
     control)
-        control=$(d_control)
-        [[ $control ]] || exit 1
-        mpc "$(control)" >/dev/null
+        mpc "$(d_control)" >/dev/null
     ;;
 esac
