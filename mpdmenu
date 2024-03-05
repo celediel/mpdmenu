@@ -18,13 +18,13 @@ show_help() {
     printf "$me\ndmenu frontend to mpd\n\n"
     printf "USAGE:\n\t$me [FLAGS]\n"
     printf "FLAGS:\n"
-    printf "\t-h\t\tPrints help information\n"
-    printf "\t-a\t\tArtist mode\n"
-    printf "\t-A\t\tAlbum artist mode\n"
-    printf "\t-b\t\tAlbum mode\n"
-    printf "\t-p\t\tPlaylist mode\n"
-    printf "\t-P\t\tPlaylists mode\n"
-    printf "\t-c\t\tControl mode\n"
+    printf "\t-h, --help\t\tPrints help information\n"
+    printf "\t-a, --artist\t\tArtist mode\n"
+    printf "\t-A, --albumartist\tAlbum artist mode\n"
+    printf "\t-b, --album\t\tAlbum mode\n"
+    printf "\t-p, --playlist\t\tPlaylist mode\n"
+    printf "\t-P, --playlists\t\tPlaylists mode\n"
+    printf "\t-c, --control\t\tControl mode\n"
     printf "\n"
 }
 
@@ -108,13 +108,13 @@ for arg do
     fi
 
     case "$arg" in
-        -h) show_help && exit 0 ;;
-        -a) mode=artist ;;
-        -A) mode=albumartist ;;
-        -b) mode=album ;;
-        -p) mode=playlist ;;
-        -P) mode=playlists ;;
-        -c) mode=control ;;
+        -h|--help) show_help && exit 0 ;;
+        -a|--artist) mode=artist ;;
+        -A|--albumartist) mode=albumartist ;;
+        -b|--album) mode=album ;;
+        -p|--playlist) mode=playlist ;;
+        -P|--playlists) mode=playlists ;;
+        -c|--control) mode=control ;;
     esac
 
     let i++
