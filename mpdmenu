@@ -13,6 +13,21 @@ controls="󰐎 toggle
 󰒟 random
 󰕇 repeat"
 
+show_help() {
+    me=$(basename $0)
+    printf "$me\ndmenu frontend to mpd\n\n"
+    printf "USAGE:\n\t$me [FLAGS]\n"
+    printf "FLAGS:\n"
+    printf "\t-h\t\tPrints help information\n"
+    printf "\t-a\t\tArtist mode\n"
+    printf "\t-A\t\tAlbum artist mode\n"
+    printf "\t-b\t\tAlbum mode\n"
+    printf "\t-p\t\tPlaylist mode\n"
+    printf "\t-P\t\tPlaylists mode\n"
+    printf "\t-c\t\tControl mode\n"
+    printf "\n"
+}
+
 make_status() {
     local nowplaying=$(mpc status | head -n1)
     local random_status=$(mpc status | tail -n1 | grep -Eo "random: (on|off)" | cut -d':' -f2 | xargs)
@@ -93,6 +108,7 @@ for arg do
     fi
 
     case "$arg" in
+        -h) show_help && exit 0 ;;
         -a) mode=artist ;;
         -A) mode=albumartist ;;
         -b) mode=album ;;
