@@ -47,35 +47,16 @@ make_status() {
 }
 
 d_artist() {
-    mpc list artist | sort -f | $dmenu "artist > " "${dmenu_args[@]}"
-}
-
-d_albumartist() {
-    mpc list albumartist | sort -f | $dmenu "album artist > " "${dmenu_args[@]}"
+    # kinda stupid but it works
+    mpc list "${1}artist" | sort -f | $dmenu "artist > " "${dmenu_args[@]}"
 }
 
 d_album() {
     local artist="$1"
+    local wantedtype="$2"
     local albums
 
-    mapfile -t albums < <(mpc list album artist "$artist")
-    if (( ${#albums[@]} > 1 )) ; then
-        {
-            printf '%s\n' "$all_name"
-            printf '%s\n' "${albums[@]}" | sort -f
-        } | $dmenu "albums by $artist > " "${dmenu_args[@]}"
-    else
-        # We only have one album, so just use that.
-        printf '%s\n' "${albums[0]}"
-    fi
-}
-
-# TODO: refactor to repeat less code
-d_albuma() {
-    local artist="$1"
-    local albums
-
-    mapfile -t albums < <(mpc list album albumartist "$artist")
+    mapfile -t albums < <(mpc list album "$wantedtype" "$artist")
     if (( ${#albums[@]} > 1 )) ; then
         {
             printf '%s\n' "$all_name"
@@ -131,7 +112,7 @@ case "$mode" in
         artist=$(d_artist)
         [[ $artist ]] || exit 1
 
-        album=$(d_album "$artist")
+        album=$(d_album "$artist" "artist")
         [[ $album ]] || exit 2
 
         mpc clear >/dev/null
@@ -144,10 +125,12 @@ case "$mode" in
         mpc play >/dev/null
     ;;
     albumartist)
-        artist=$(d_albumartist)
+        artist=$(d_artist "album")
+        printf "got $artist back"
         [[ $artist ]] || exit 1
 
-        album=$(d_albuma "$artist")
+        album=$(d_album "$artist" "albumartist")
+        printf "got $album by $artist back"
         [[ $album ]] || exit 2
 
         mpc clear >/dev/null
