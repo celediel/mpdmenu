@@ -27,11 +27,32 @@ d_artist() {
     mpc list artist | sort -f | dmenu -p "artist > " "${dmenu_args[@]}"
 }
 
+d_albumartist() {
+    mpc list albumartist | sort -f | dmenu -p "album artist > " "${dmenu_args[@]}"
+}
+
 d_album() {
     local artist="$1"
     local albums
 
     mapfile -t albums < <(mpc list album artist "$artist")
+    if (( ${#albums[@]} > 1 )) ; then
+        {
+            printf '%s\n' "$all_name"
+            printf '%s\n' "${albums[@]}" | sort -f
+        } | dmenu -p "albums by $artist > " "${dmenu_args[@]}"
+    else
+        # We only have one album, so just use that.
+        printf '%s\n' "${albums[0]}"
+    fi
+}
+
+# TODO: refactor to repeat less code
+d_albuma() {
+    local artist="$1"
+    local albums
+
+    mapfile -t albums < <(mpc list album albumartist "$artist")
     if (( ${#albums[@]} > 1 )) ; then
         {
             printf '%s\n' "$all_name"
@@ -71,6 +92,7 @@ for arg do
 
     case "$arg" in
         -a) mode=artist ;;
+        -A) mode=albumartist ;;
         -b) mode=album ;;
         -p) mode=playlist ;;
         -c) mode=control ;;
@@ -92,6 +114,22 @@ case "$mode" in
             mpc find artist "$artist" | sort | mpc add
         else
             mpc find artist "$artist" album "$album" | sort | mpc add
+        fi
+
+        mpc play >/dev/null
+    ;;
+    albumartist)
+        artist=$(d_albumartist)
+        [[ $artist ]] || exit 1
+
+        album=$(d_albuma "$artist")
+        [[ $album ]] || exit 2
+
+        mpc clear
+        if [[ $album == "$all_name" ]]; then
+            mpc find albumartist "$artist" | sort | mpc add
+        else
+            mpc find albumartist "$artist" album "$album" | sort | mpc add
         fi
 
         mpc play >/dev/null
