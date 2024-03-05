@@ -26,6 +26,11 @@ show_help() {
     printf "\t-P, --playlists\t\tPlaylists mode\n"
     printf "\t-c, --control\t\tControl mode\n"
     printf "\n"
+    printf "DMENU ARGS:\n"
+    printf "\tEvery argument after :: will be passed to dmenu.\n"
+    printf "\n\tFor example:\n"
+    printf "\n\t$me -p :: -sb '#000000'\n"
+    printf "\n"
 }
 
 make_status() {

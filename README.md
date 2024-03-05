@@ -2,9 +2,26 @@ Simple dmenu frontend for MPD.
 
 # Arguments
 
-Pass mpdmenu arguments first, followed by any dmenu arguments. They are separated by `::`. For example:
+```
+mpdmenu
+dmenu frontend to mpd
 
-    mpdmenu -p :: -sb '#000000'
+USAGE:
+	mpdmenu [FLAGS]
+FLAGS:
+	-h, --help         Prints help information
+	-a, --artist       Artist mode
+	-A, --albumartist  Album artist mode
+	-b, --album        Album mode
+	-p, --playlist     Playlist mode
+	-P, --playlists    Playlists mode
+	-c, --control      Control mode
 
-`-l` is library mode (default), which descends artists and albums. `-p` is
-playlist mode, which selects a track from the current playlist.
+DMENU ARGS:
+	Every argument after :: will be passed to dmenu.
+	
+	For example:
+
+	mpdmenu -p :: -sb '#000000'
+
+```
