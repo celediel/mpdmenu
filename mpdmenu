@@ -95,6 +95,7 @@ for arg do
         -A) mode=albumartist ;;
         -b) mode=album ;;
         -p) mode=playlist ;;
+        -P) mode=playlists ;;
         -c) mode=control ;;
     esac
 
@@ -144,6 +145,12 @@ case "$mode" in
     ;;
     playlist)
         mpc play "$(d_playlist)" >/dev/null
+    ;;
+    playlists)
+        playlist=$(mpc lsplaylists | dmenu -p "playlists > ")
+        [[ $playlist ]] || exit 1
+        mpc clear
+        mpc load $playlist
     ;;
     control)
         control=$(d_control)
